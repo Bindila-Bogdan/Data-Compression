@@ -56,8 +56,9 @@ def lzw_decode(encoding):
     return decoding
 
 
-INPUT_DATA = "The decoding stage of this algorithm uses the received numerical codes and the same initial dictionary as in the encoding part (only that in this case the keys and values are switched), to translate these codes back into the original message. The algorithm can be seen in Algorithm"
-input_encoding = lzw_encode(INPUT_DATA)
-input_decoding = lzw_decode(input_encoding)
-print(input_encoding)
-print(input_decoding == INPUT_DATA)
+if __name__ == "__main__":
+    INPUT_DATA = """This is a test text."""
+    input_encoding = lzw_encode(INPUT_DATA)
+    input_decoding = lzw_decode(input_encoding)
+    print(input_encoding)
+    print(input_decoding == INPUT_DATA)
