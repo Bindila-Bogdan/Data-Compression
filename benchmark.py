@@ -1,6 +1,7 @@
 import sys
 import json
 import time
+import pandas as pd
 from lempel_ziv_77_algorithm import lz77_encode, lz77_decode
 from lempel_ziv_welch_algorithm import lzw_encode, lzw_decode
 
@@ -21,7 +22,7 @@ def get_number_of_bytes(encoding, encoding_algorithm=None):
         return len(encoding)
 
 
-def perform_measurements(texts, number_of_repetitions=100):
+def perform_measurements(texts, text_type, number_of_repetitions=100):
     lz77_encoding_times = []
     lz77_decoding_times = []
     lzw_encoding_times = []
@@ -70,16 +71,20 @@ def perform_measurements(texts, number_of_repetitions=100):
         lz77_decoding_times.append(lz77_decoding_time / number_of_repetitions)
         lzw_encoding_times.append(lzw_encoding_time / number_of_repetitions)
         lzw_decoding_times.append(lzw_decoding_time / number_of_repetitions)
-        
-    print(f"Text sizes in bytes: {text_sizes}\n")
 
-    print(f"LZ77 encoding time:\n{lz77_encoding_times}")
-    print(f"LZ77 decoding time:\n{lz77_decoding_times}")
-    print(f"LZ77 compression rates:\n{lz77_compression_rates}\n")
+        recorded_measuremets = pd.DataFrame(
+            {
+                "text_sizes": text_sizes,
+                "LZ77 encoding time": lz77_encoding_times,
+                "LZ77 decoding time": lz77_decoding_times,
+                "LZ77 compression rates": lz77_compression_rates,
+                "LZW encoding time": lzw_encoding_times,
+                "LZW decoding time": lzw_decoding_times,
+                "LZW compression rates": lzw_compression_rates,
+            }
+        )
 
-    print(f"LZW encoding time:\n{lzw_encoding_times}")
-    print(f"LZW decoding time:\n{lzw_decoding_times}")
-    print(f"LZW compression rates:\n{lzw_compression_rates}")
+        recorded_measuremets.to_csv(f"./data/measurents_{text_type}.csv")
 
 
 if __name__ == "__main__":
@@ -88,6 +93,7 @@ if __name__ == "__main__":
         "english_literature_texts",
         "programming_source_code",
     ]
+    type_index = 2
 
-    texts = load_data(types_of_texts[1])
-    perform_measurements(texts, number_of_repetitions=1)
+    texts = load_data(types_of_texts[type_index])
+    perform_measurements(texts, types_of_texts[type_index], number_of_repetitions=1)
